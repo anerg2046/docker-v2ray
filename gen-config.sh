@@ -48,7 +48,7 @@ cp -f config/v2ray/default_config.json config/v2ray/config.json
 sed -i "s/1234/${ws_port}/" config/v2ray/config.json
 sed -i "s/uuid/${uuid}/" config/v2ray/config.json
 sed -i "s/\"alterId\": 10/\"alterId\": ${alert_id}/" config/v2ray/config.json
-sed -i "s/ws_path/${ws_path}/" config/caddy/Caddyfile
+sed -i "s/ws_path/${ws_path}/" config/v2ray/config.json
 
 echo "====================================="
 echo "V2ray 配置信息"
