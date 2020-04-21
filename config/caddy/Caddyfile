@@ -1,0 +1,10 @@
+v2r.mooim.com {
+    root * /var/www/v2ray
+    file_server
+    gzip
+    tls a@a.com
+    proxy /7eda5df6e localhost:7118 {
+        websocket
+        header_upstream -Origin
+    }
+}
