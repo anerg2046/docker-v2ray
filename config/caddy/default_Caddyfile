@@ -5,7 +5,7 @@ example.domain {
 
     tls your@email.com
 
-    reverse_proxy /ws_path v2y_core:1234 {
+    reverse_proxy /ws_path/ v2y_core:1234 {
         header_up X-Forwarded-For {remote_host}
     }
 
