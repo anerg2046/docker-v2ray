@@ -1,5 +1,5 @@
 # 一键docker部署V2ray
-> Caddy自动证书申请，TSL+WebSocket
+> Caddy自动证书申请，TLS+WebSocket
 
 ### 准备工作
 + 一个域名，并且将域名添加一条A记录到你的VPS
@@ -44,3 +44,6 @@ cd docker-v2ray
 + 脚本不含`BBR`，请自行安装，因为我觉得装不装其实都差不多
 + 有特殊需求的人，请自行修改脚本or配置文件模板
 + 还有问题提交issue
+
+### 相关
+[JustHost.ru](https://justhost.ru/?ref=69692) 北方联通推荐使用，价格便宜不限量
