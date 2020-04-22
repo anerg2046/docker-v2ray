@@ -71,4 +71,5 @@ sed -i "s/alertid-placeholder/${alert_id}/" config/v2ray/client.json
 sed -i "s/ws_path-placeholder/${ws_path}/" config/v2ray/client.json
 
 clientBase64="`cat config/v2ray/client.json | base64`"
+echo "以下字符串如有空格，请自行去掉空格"
 echo "vmess://"$clientBase64
