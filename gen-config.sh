@@ -62,3 +62,13 @@ echo "伪装类型（type）： none"
 echo "路径（不要落下/）： /${ws_path}/"
 echo "底层传输安全： tls"
 echo "====================================="
+
+cp -f config/v2ray/default_client.json config/v2ray/client.json
+sed -i "s/hostname-placeholder/${domain}/" config/v2ray/client.json
+sed -i "s/address-placeholder/${domain}/" config/v2ray/client.json
+sed -i "s/uuid-placeholder/${uuid}/" config/v2ray/client.json
+sed -i "s/alertid-placeholder/${alert_id}/" config/v2ray/client.json
+sed -i "s/ws_path-placeholder/${ws_path}/" config/v2ray/client.json
+
+clientBase64=$( base64 <<< `cat config/v2ray/client.json`)
+echo "vmess://"$clientBase64
