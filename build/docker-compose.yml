@@ -20,6 +20,7 @@ services:
     restart: always
     volumes:
       - ../config/caddy:/etc/caddy
+      - ../config/ssl:/data/caddy/certificates
       - ../html:/var/www/v2ray
     ports:
       - "80:80"
