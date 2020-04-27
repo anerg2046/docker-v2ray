@@ -38,6 +38,11 @@ cd docker-v2ray
 
 > 首次执行可能需要等两分钟，证书申请好了才能访问
 
+### 宿主机已占用80 443端口的处理方式
++ 自行修改`build/docker-compose.yml`中的映射端口
++ `nginx`的话需要`ssl_preread`支持，具体可参考这篇博文 https://www.jianshu.com/p/70b500c07ccc
++ 已在`config/nginx`中给出了编译和配置范例
+
 ### 其他说明
 + 当前V2ray版本v4.23.1
 + `html`目录里我放的是个域名出售页面，邮箱是我的，在`index.html`里，烦请各自更改一下
