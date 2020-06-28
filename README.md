@@ -7,12 +7,15 @@
 
 附上`CentOS7`的安装命令
 ```sh
-yum install -y yum-utils device-mapper-persistent-data lvm2 epel-release python-pip gcc libffi-devel python-devel openssl-devel
+yum update -y
+yum install -y yum-utils device-mapper-persistent-data lvm2 epel-release gcc libffi-devel python-devel openssl-devel git net-tools
 yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+yum update -y
 yum makecache fast
-yum install docker-ce
+yum install -y docker-ce
 service docker start
 systemctl enable docker
+yum install -y python-pip
 pip install --upgrade pip
 pip install docker-compose --ignore-installed requests
 ```
