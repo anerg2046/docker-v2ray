@@ -3,7 +3,7 @@ From alpine:3.11
 LABEL maintainer "Coeus r.anerg@gmail.com"
 
 ENV TIMEZONE        Asia/Shanghai
-ENV V2R_VERSION     v4.23.3
+ENV V2R_VERSION     v4.25.1
 ENV V2R_PATH_LOG    /var/log/v2ray
 ENV V2R_PATH_CONF   /etc/v2ray
 ENV V2R_URL         https://github.com/v2ray/v2ray-core/releases/download/${V2R_VERSION}/v2ray-linux-64.zip
