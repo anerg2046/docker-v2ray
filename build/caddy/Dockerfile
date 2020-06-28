@@ -1,4 +1,4 @@
-From caddy:2.0.0-rc.3-alpine
+From caddy:2.0.0-alpine
 
 LABEL maintainer "Coeus r.anerg@gmail.com"
 
