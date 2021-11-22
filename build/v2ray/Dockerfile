@@ -6,7 +6,7 @@ ENV TIMEZONE        Asia/Shanghai
 ENV V2R_VERSION     v4.31.0
 ENV V2R_PATH_LOG    /var/log/v2ray
 ENV V2R_PATH_CONF   /etc/v2ray
-ENV V2R_URL         https://github.com/v2ray/v2ray-core/releases/download/${V2R_VERSION}/v2ray-linux-64.zip
+ENV V2R_URL         https://github.com/v2fly/v2ray-core/releases/tag/${V2R_VERSION}/v2ray-linux-64.zip
 
 RUN set -xe \
     && apk -U upgrade \
