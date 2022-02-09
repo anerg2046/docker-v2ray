@@ -57,3 +57,8 @@ cd docker-v2ray
 
 ### 相关
 [JustHost.ru](https://justhost.ru/?ref=69692) 北方联通推荐使用，价格便宜不限量
+如果开出的ip不能访问，提交一个ticket，让给一个国内可访问ip即可，好像是几块钱rmb
+
+### 其他说明iip
+### 其他说明m
+### 其他说明
