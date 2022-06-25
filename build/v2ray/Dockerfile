@@ -1,4 +1,4 @@
-From alpine:3.11
+FROM alpine:3.11
 
 LABEL maintainer "Coeus r.anerg@gmail.com"
 
