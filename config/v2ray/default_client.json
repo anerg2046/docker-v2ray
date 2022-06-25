@@ -4,7 +4,7 @@
     "add": "address-placeholder",
     "port": "443",
     "id": "uuid-placeholder",
-    "aid": "alertid-placeholder",
+    "aid": "0",
     "net": "ws",
     "type": "none",
     "host": "hostname-placeholder",

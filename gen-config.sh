@@ -22,17 +22,11 @@ if [ -z $email ];then
 fi
 
 read -rp "请输入websocket端口(默认随机:1234~65535):" ws_port
-read -rp "请输入alterId(默认随机:10~128):" alert_id
 uuid=$(uuidgen)
 
 if [ -z $ws_port ];then
     ws_port=$(($RANDOM+1234))
     # echo $ws_port
-fi
-
-if [ -z $alert_id ];then
-    alert_id=$(($RANDOM%118+10))
-    # echo $alert_id
 fi
 
 ws_path="`echo $RANDOM | md5sum | cut -c 3-11`"
@@ -47,7 +41,6 @@ sed -i "s/your@email.com/${email}/" config/caddy/Caddyfile
 cp -f config/v2ray/default_config.json config/v2ray/config.json
 sed -i "s/1234/${ws_port}/" config/v2ray/config.json
 sed -i "s/uuid/${uuid}/" config/v2ray/config.json
-sed -i "s/\"alterId\": 10/\"alterId\": ${alert_id}/" config/v2ray/config.json
 sed -i "s/ws_path/${ws_path}/" config/v2ray/config.json
 
 echo "====================================="
@@ -55,7 +48,7 @@ echo "V2ray 配置信息"
 echo "地址（address）: ${domain}"
 echo "端口（port）： 443"
 echo "用户id（UUID）： ${uuid}"
-echo "额外id（alterId）： ${alert_id}"
+echo "额外id（alterId）： 0"
 echo "加密方式（security）： 自适应"
 echo "传输协议（network）： ws"
 echo "伪装类型（type）： none"
@@ -67,7 +60,6 @@ cp -f config/v2ray/default_client.json config/v2ray/client.json
 sed -i "s/hostname-placeholder/${domain}/" config/v2ray/client.json
 sed -i "s/address-placeholder/${domain}/" config/v2ray/client.json
 sed -i "s/uuid-placeholder/${uuid}/" config/v2ray/client.json
-sed -i "s/alertid-placeholder/${alert_id}/" config/v2ray/client.json
 sed -i "s/ws_path-placeholder/${ws_path}/" config/v2ray/client.json
 
 clientBase64="`cat config/v2ray/client.json | base64 -w 0`"

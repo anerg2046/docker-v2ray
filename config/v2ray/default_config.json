@@ -9,7 +9,7 @@
                 "clients": [
                     {
                         "id": "uuid",
-                        "alterId": 10
+                        "alterId": 0
                     }
                 ]
             },
