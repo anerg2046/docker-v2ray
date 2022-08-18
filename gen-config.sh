@@ -43,6 +43,9 @@ sed -i "s/1234/${ws_port}/" config/v2ray/config.json
 sed -i "s/uuid/${uuid}/" config/v2ray/config.json
 sed -i "s/ws_path/${ws_path}/" config/v2ray/config.json
 
+cp -f config/subweb/default_conf.js config/subweb/conf.js
+sed -i "s/defaultbackendurl/${domain}/" config/subweb/conf.js
+
 echo "====================================="
 echo "V2ray 配置信息"
 echo "地址（address）: ${domain}"

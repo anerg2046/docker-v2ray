@@ -16,12 +16,12 @@ if [ "$COMMAND" == "start" ]; then
 elif [ "$COMMAND" == "stop" ]; then
     docker-compose -p v2ray stop
 elif [ "$COMMAND" == "build" ]; then
-    docker-compose -p v2ray stop
-    docker-compose -p v2ray up --build -d
+    docker-compose -p v2ray build --force-rm --no-cache
+    docker-compose -p v2ray up -d
     # docker rmi $(docker images | grep "none" | awk '{print $3}')
-    docker ps -a | grep "Exited" | awk '{print $1}' | xargs docker stop
-    docker ps -a | grep "Exited" | awk '{print $1}' | xargs docker rm
-    docker images | grep "none" | awk '{print $3}' | xargs docker rmi
+    docker ps -a | grep "Exited" | awk '{print $1}' | xargs docker stop || :
+    docker ps -a | grep "Exited" | awk '{print $1}' | xargs docker rm || :
+    docker images | grep "none" | awk '{print $3}' | xargs docker rmi || :
 else
     echo "useage: docker-v2ray start|stop|build"
 fi

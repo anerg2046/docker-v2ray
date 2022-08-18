@@ -1,4 +1,4 @@
-FROM alpine:3.11
+FROM alpine:3.14
 
 LABEL maintainer "Coeus r.anerg@gmail.com"
 
@@ -26,6 +26,6 @@ RUN set -xe \
     && cp /usr/share/zoneinfo/${TIMEZONE} /etc/localtime \
     # 删除不必要的东西
     && apk del .build-deps \
-    && rm -rf /tmp/* 
+    && rm -rf /tmp/*
 
 CMD ["/usr/bin/v2ray/v2ray", "-config", "/etc/v2ray/config.json"]

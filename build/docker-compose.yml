@@ -13,7 +13,7 @@ services:
       nofile:
         soft: 65535
         hard: 65535
-  
+
   caddy:
     build: ./caddy
     container_name: caddy
@@ -21,10 +21,22 @@ services:
     volumes:
       - ../config/caddy:/etc/caddy
       - ../config/ssl:/data/caddy/certificates
-      - ../html:/var/www/v2ray
+      - ../config/subweb/conf.js:/var/www/subweb/conf.js
     ports:
       - "80:80"
       - "443:443"
+    networks:
+      - webnet
+    ulimits:
+      nproc: 65535
+      nofile:
+        soft: 65535
+        hard: 65535
+
+  subconverter:
+    build: ./subconverter
+    container_name: subconverter
+    restart: always
     networks:
       - webnet
     ulimits:
