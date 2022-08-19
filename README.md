@@ -1,6 +1,10 @@
 # 一键docker部署V2ray
 > Caddy自动证书申请，TLS+WebSocket
 
+# 如果你只想运行一个docker，可以看这里
+
+https://github.com/anerg2046/Caddy_V2ray
+
 ### 准备工作
 + 一个域名，并且将域名添加一条A记录到你的VPS
 + VPS安装`Docker`及`Docker Compose`
