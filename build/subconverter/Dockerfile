@@ -1,4 +1,4 @@
-FROM alpine:3.14
+FROM alpine:3.16
 
 ENV TIMEZONE        Asia/Shanghai
 ENV SUBCONVERTER_VERSION=v0.7.2
@@ -13,7 +13,6 @@ RUN set -xe \
     && tar -C /tmp/ -xzf /tmp/subconverter.tar.gz  \
     && mv /tmp/subconverter /base \
     && cp /usr/share/zoneinfo/${TIMEZONE} /etc/localtime \
-    # 删除不必要的东西
     && apk del .build-deps \
     && rm -rf /tmp/*
 

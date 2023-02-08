@@ -1,6 +1,4 @@
-FROM alpine:3.14
-
-LABEL maintainer "Coeus r.anerg@gmail.com"
+FROM alpine:3.16
 
 ENV TIMEZONE        Asia/Shanghai
 ENV V2R_VERSION     v4.45.2
@@ -24,7 +22,6 @@ RUN set -xe \
     && mv /tmp/v2ray/v2ctl /usr/bin/v2ray/ \
     && chmod +x /usr/bin/v2ray/* \
     && cp /usr/share/zoneinfo/${TIMEZONE} /etc/localtime \
-    # 删除不必要的东西
     && apk del .build-deps \
     && rm -rf /tmp/*
 

@@ -11,9 +11,7 @@ RUN apk -U upgrade && \
     pwd && \
     ls -lah
 
-FROM caddy:2.5.2-alpine
-
-LABEL maintainer "Coeus r.anerg@gmail.com"
+FROM caddy:2-alpine
 
 COPY --from=build /tmp/build/sub-web/dist /var/www/subweb
 
@@ -27,7 +25,6 @@ RUN set -xe \
     && mkdir -p \
         ${CADDY_PATH_CONF} \
     && cp /usr/share/zoneinfo/${TIMEZONE} /etc/localtime \
-    # 删除不必要的东西
     && apk del .build-deps \
     && rm -rf /tmp/* \
     && ls -lah /var/www/subweb

@@ -22,7 +22,11 @@ if [ -z $email ];then
 fi
 
 read -rp "请输入websocket端口(默认随机:1234~65535):" ws_port
-uuid=$(uuidgen)
+
+read -rp "请输入UUID(默认随机生成):" uuid
+if [ -z $uuid ];then
+    uuid=$(uuidgen)
+fi
 
 if [ -z $ws_port ];then
     ws_port=$(($RANDOM+1234))

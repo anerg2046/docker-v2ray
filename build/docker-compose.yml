@@ -14,14 +14,15 @@ services:
         soft: 65535
         hard: 65535
 
-  caddy:
-    build: ./caddy
-    container_name: caddy
+  sub-web-caddy:
+    image: "wqferan/sub-web:latest"
+    container_name: sub-web-caddy
     restart: always
     volumes:
-      - ../config/caddy:/etc/caddy
-      - ../config/ssl:/data/caddy/certificates
-      - ../config/subweb/conf.js:/var/www/subweb/conf.js
+      - $PWD/Caddyfile:/etc/caddy/Caddyfile
+      - caddy_data:/data
+      - caddy_config:/config
+      - $PWD/conf.js:/srv/conf.js
     ports:
       - "80:80"
       - "443:443"
