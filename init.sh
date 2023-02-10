@@ -1,6 +1,6 @@
 #!/bin/bash
 
-VALID_ARGS=$(getopt -o '' --long sslisten:,ssport:,sspass:,ssmode:,ssmethod:,cftoken:,cfkey:,cfemail:,cfzone:,cfsubdomain: -- "$@")
+VALID_ARGS=$(getopt -o '' --long sslisten:,ssport:,sspass:,ssmode:,ssmethod:,cftoken:,cfkey:,cfemail:,cfzone:,cfsubdomain:,cfipv4:,cfipv6: -- "$@")
 if [[ $? -ne 0 ]]; then
     exit 1;
 fi
@@ -17,6 +17,8 @@ CLOUDFLARE_API_KEY="${CF_API_KEY:-yourkey}"
 CLOUDFLARE_ACCOUNT_EMAIL="${CF_ACCOUNT_EMAIL:-youremail}"
 CLOUDFLARE_ZONE_ID="{CF_ZONE_ID:-zoneid}"
 CLOUDFLARE_SUBDOMAIN="${CF_SUBDOMAIN:-yoursubdomain}"
+CLOUDFLARE_IPV4="${CF_IPV4:-true}"
+CLOUDFLARE_IPV6="${CF_IPV6:-true}"
 
 
 while true; do
@@ -61,6 +63,14 @@ while true; do
         CLOUDFLARE_SUBDOMAIN="$2"
         shift 2
         ;;
+    --cfipv4)
+        CLOUDFLARE_IPV4="$2"
+        shift 2
+        ;;
+    --cfipv6)
+        CLOUDFLARE_IPV6="$2"
+        shift 2
+        ;;
     -- ) shift; break ;;
     * ) break ;;
   esac
@@ -78,6 +88,8 @@ CLOUDFLARE_API_KEY is ${CLOUDFLARE_API_KEY}
 CLOUDFLARE_ACCOUNT_EMAIL is ${CLOUDFLARE_ACCOUNT_EMAIL}
 CLOUDFLARE_ZONE_ID is ${CLOUDFLARE_ZONE_ID}
 CLOUDFLARE_SUBDOMAIN is ${CLOUDFLARE_SUBDOMAIN}
+CLOUDFLARE_IPV4 is ${CLOUDFLARE_IPV4}
+CLOUDFLARE_IPV6 is ${CLOUDFLARE_IPV6}
 """
 
 curl -fsSL https://get.docker.com |bash
@@ -116,16 +128,15 @@ services:
     container_name: ssserver
     image: "ghcr.io/shadowsocks/ssserver-rust:latest"
     restart: always
+    network_mode: "host"
     volumes:
       - ./ss-server.json:/etc/shadowsocks-rust/config.json
-    ports:
-      - "${SSSERVER_PORT}:8883"
   cloudflare-ddns:
     image: wqferan/cloudflare-ddns:latest
     container_name: cloudflare-ddns
     security_opt:
       - no-new-privileges:true
-    network_mode: 'host'
+    network_mode: "host"
     environment:
       - PUID=1000
       - PGID=1000
@@ -137,7 +148,7 @@ EOF
 cat <<EOF |sudo tee ~/ss-server.json
 {
   "server": "${SSSERVER_LISTEN}",
-  "server_port": 8883,
+  "server_port": ${SSSERVER_PORT},
   "password": "${SSSERVER_PASSWORD}",
   "timeout": 5000,
   "mode": "${SSSERVER_MODE}",
@@ -145,6 +156,7 @@ cat <<EOF |sudo tee ~/ss-server.json
   "fast_open": false,
   "workers": 100,
   "prefer_ipv6": true,
+  "ipv6_first": true,
   "nameserver": "8.8.8.8,1.1.1.1"
 }
 EOF
@@ -160,8 +172,8 @@ cloudflare:
   subdomains:
   - name: ${CLOUDFLARE_SUBDOMAIN}
     proxied: false
-a: true
-aaaa: false
+a: ${CLOUDFLARE_IPV4}
+aaaa: ${CLOUDFLARE_IPV6}
 ttl: 60
 repeat: 180d
 timeoud: 10s
