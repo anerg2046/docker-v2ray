@@ -166,8 +166,6 @@ cat <<EOF |sudo tee ~/ddns-config.yml
 cloudflare:
 - authentication:
     api_token: ${CLOUDFLARE_API_TOKEN}
-    api_key: ${CLOUDFLARE_API_KEY}
-    account_email: ${CLOUDFLARE_ACCOUNT_EMAIL}
   zone_id: ${CLOUDFLARE_ZONE_ID}
   subdomains:
   - name: ${CLOUDFLARE_SUBDOMAIN}
