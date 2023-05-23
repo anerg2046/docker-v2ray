@@ -13,7 +13,7 @@ SSSERVER_MODE="${SS_MODE:-tcp_only}"
 SSSERVER_METHOD="${SS_METHOD:-chacha20-ietf-poly1305}"
 
 DDNS_API_TOKEN="${DDNS_API_TOKEN:-yourtoken}"
-DDNS_DOMAIN="${DDNS_SUBDOMAIN:-yoursubdomain}"
+DDNS_DOMAIN="${DDNS_DOMAIN:-yoursubdomain}"
 DDNS_NETINTERFACE="${DDNS_NETINTERFACE:-ens4}"
 DDNS_IPV4="${DDNS_IPV4:-true}"
 DDNS_IPV6="${DDNS_IPV6:-true}"
@@ -46,7 +46,7 @@ while true; do
         shift 2
         ;;
     --ddnsdomain)
-        DDNS_SUBDOMAIN="$2"
+        DDNS_DOMAIN="$2"
         shift 2
         ;;
     --ddnsnetinf)
@@ -155,7 +155,7 @@ dnsconf:
         netinterface: ${DDNS_NETINTERFACE}
         cmd: ""
         domains:
-            - "${DDNS_DOMAIN}"
+            - ${DDNS_DOMAIN}
       ipv6:
         enable: ${DDNS_IPV4}
         gettype: netInterface
