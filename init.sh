@@ -1,6 +1,6 @@
 #!/bin/bash
 
-VALID_ARGS=$(getopt -o '' --long sslisten:,ssport:,sspass:,ssmode:,ssmethod:,cftoken:,cfkey:,cfemail:,cfzone:,cfsubdomain:,cfipv4:,cfipv6: -- "$@")
+VALID_ARGS=$(getopt -o '' --long sslisten:,ssport:,sspass:,ssmode:,ssmethod:,ddnstoken:,ddnsdomain:,ddnsnetinf:,ddnsipv4:,ddnsipv6: -- "$@")
 if [[ $? -ne 0 ]]; then
     exit 1;
 fi
@@ -12,13 +12,11 @@ SSSERVER_PASSWORD="${SS_PASS:-yourpassword}"
 SSSERVER_MODE="${SS_MODE:-tcp_only}"
 SSSERVER_METHOD="${SS_METHOD:-chacha20-ietf-poly1305}"
 
-CLOUDFLARE_API_TOKEN="${CF_API_TOKEN:-yourtoken}"
-CLOUDFLARE_API_KEY="${CF_API_KEY:-yourkey}"
-CLOUDFLARE_ACCOUNT_EMAIL="${CF_ACCOUNT_EMAIL:-youremail}"
-CLOUDFLARE_ZONE_ID="{CF_ZONE_ID:-zoneid}"
-CLOUDFLARE_SUBDOMAIN="${CF_SUBDOMAIN:-yoursubdomain}"
-CLOUDFLARE_IPV4="${CF_IPV4:-true}"
-CLOUDFLARE_IPV6="${CF_IPV6:-true}"
+DDNS_API_TOKEN="${DDNS_API_TOKEN:-yourtoken}"
+DDNS_DOMAIN="${DDNS_SUBDOMAIN:-yoursubdomain}"
+DDNS_NETINTERFACE="${DDNS_NETINTERFACE:-ens4}"
+DDNS_IPV4="${DDNS_IPV4:-true}"
+DDNS_IPV6="${DDNS_IPV6:-true}"
 
 
 while true; do
@@ -43,32 +41,24 @@ while true; do
         SSSERVER_METHOD="$2"
         shift 2
         ;;
-    --cftoken)
-        CLOUDFLARE_API_TOKEN="$2"
+    --ddnstoken)
+        DDNS_API_TOKEN="$2"
         shift 2
         ;;
-    --cfkey)
-        CLOUDFLARE_API_KEY="$2"
+    --ddnsdomain)
+        DDNS_SUBDOMAIN="$2"
         shift 2
         ;;
-    --cfemail)
-        CLOUDFLARE_ACCOUNT_EMAIL="$2"
+    --ddnsnetinf)
+        DDNS_NETINTERFACE="$2"
         shift 2
         ;;
-    --cfzone)
-        CLOUDFLARE_ZONE_ID="$2"
+    --ddnsipv4)
+        DDNS_IPV4="$2"
         shift 2
         ;;
-    --cfsubdomain)
-        CLOUDFLARE_SUBDOMAIN="$2"
-        shift 2
-        ;;
-    --cfipv4)
-        CLOUDFLARE_IPV4="$2"
-        shift 2
-        ;;
-    --cfipv6)
-        CLOUDFLARE_IPV6="$2"
+    --ddnsipv6)
+        DDNS_IPV6="$2"
         shift 2
         ;;
     -- ) shift; break ;;
@@ -83,13 +73,11 @@ SSSERVER_PASSWORD is ${SSSERVER_PASSWORD}
 SSSERVER_MODE is ${SSSERVER_MODE}
 SSSERVER_METHOD is ${SSSERVER_METHOD}
 
-CLOUDFLARE_API_TOKEN is ${CLOUDFLARE_API_TOKEN}
-CLOUDFLARE_API_KEY is ${CLOUDFLARE_API_KEY}
-CLOUDFLARE_ACCOUNT_EMAIL is ${CLOUDFLARE_ACCOUNT_EMAIL}
-CLOUDFLARE_ZONE_ID is ${CLOUDFLARE_ZONE_ID}
-CLOUDFLARE_SUBDOMAIN is ${CLOUDFLARE_SUBDOMAIN}
-CLOUDFLARE_IPV4 is ${CLOUDFLARE_IPV4}
-CLOUDFLARE_IPV6 is ${CLOUDFLARE_IPV6}
+DDNS_API_TOKEN is ${DDNS_API_TOKEN}
+DDNS_DOMAIN is ${DDNS_DOMAIN}
+DDNS_NETINTERFACE is ${DDNS_NETINTERFACE}
+DDNS_IPV4 is ${DDNS_IPV4}
+DDNS_IPV6 is ${DDNS_IPV6}
 """
 
 curl -fsSL https://get.docker.com |bash
@@ -131,18 +119,14 @@ services:
     network_mode: "host"
     volumes:
       - ./ss-server.json:/etc/shadowsocks-rust/config.json
-  cloudflare-ddns:
-    image: wqferan/cloudflare-ddns:latest
-    container_name: cloudflare-ddns
-    security_opt:
-      - no-new-privileges:true
-    network_mode: "host"
-    environment:
-      - PUID=1000
-      - PGID=1000
-    volumes:
-      - ./ddns-config.yml:/apps/config.yml
+  ddns-go:
+    image: jeessy/ddns-go
+    container_name: ddns-go
     restart: always
+    network_mode: host
+    command: -c /app/ddns-config.yml -f 864000 -noweb true
+    volumes:
+      - ./ddns-config.yml:/app/ddns-config.yml
 EOF
 
 cat <<EOF |sudo tee ~/ss-server.json
@@ -163,18 +147,37 @@ EOF
 
 cat <<EOF |sudo tee ~/ddns-config.yml
 ---
-cloudflare:
-- authentication:
-    api_token: ${CLOUDFLARE_API_TOKEN}
-  zone_id: ${CLOUDFLARE_ZONE_ID}
-  subdomains:
-  - name: ${CLOUDFLARE_SUBDOMAIN}
-    proxied: false
-a: ${CLOUDFLARE_IPV4}
-aaaa: ${CLOUDFLARE_IPV6}
-ttl: 60
-repeat: 180d
-timeoud: 10s
+dnsconf:
+    - ipv4:
+        enable: ${DDNS_IPV4}
+        gettype: url
+        url: https://myip4.ipip.net,https://ddns.oray.com/checkip,https://ip.3322.net,https://4.ipw.cn
+        netinterface: ${DDNS_NETINTERFACE}
+        cmd: ""
+        domains:
+            - "${DDNS_DOMAIN}"
+      ipv6:
+        enable: ${DDNS_IPV4}
+        gettype: netInterface
+        url: https://speed.neu6.edu.cn/getIP.php,https://v6.ident.me,https://6.ipw.cn
+        netinterface: ${DDNS_NETINTERFACE}
+        cmd: ""
+        ipv6reg: ""
+        domains:
+            - ${DDNS_DOMAIN}
+      dns:
+        name: cloudflare
+        id: ""
+        secret: ${DDNS_API_TOKEN}
+      ttl: "1"
+user:
+    username: ""
+    password: ""
+webhook:
+    webhookurl: ""
+    webhookrequestbody: ""
+    webhookheaders: ""
+notallowwanaccess: true
 EOF
 
 sudo docker compose up -d
